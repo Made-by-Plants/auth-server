@@ -1,30 +1,36 @@
 import dotenv from "dotenv";
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
-import pinoMiddleware from "pino-http";
 import pino from "pino";
+import { createConnection } from "typeorm";
+import { User } from "./user/user.entity";
+import { createServer } from "./server";
+import { Role } from "./role/role.entity";
 
 dotenv.config();
 
-const app = express();
-
 const logger = pino({
-  prettyPrint: app.get("env") === "development",
+  name: "ket-auth-server",
+  level: "debug",
+  prettyPrint: process.env.NODE_ENV === "development",
 });
 
-app.set("host", "0.0.0.0");
-app.set("port", process.env.PORT ?? 8080);
-app.set("json spaces", 2);
-app.use(pinoMiddleware({ logger }));
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
-
-app.listen(app.get("port"), () => {
-  logger.info(
-    "App is running at http://localhost:%d in %s mode.",
-    app.get("port"),
-    app.get("env")
-  );
-});
+createConnection({
+  type: "postgres",
+  uuidExtension: "pgcrypto",
+  url: process.env.DATABASE_URL,
+  entities: [User, Role],
+  logging: "all",
+})
+  .then((connection) => {
+    const app = createServer(logger);
+    app.listen(app.get("port"), () => {
+      logger.info(
+        "App is running at http://localhost:%d in %s mode.",
+        app.get("port"),
+        app.get("env")
+      );
+    });
+  })
+  .catch((error) => {
+    logger.error(error);
+    process.exit(1);
+  });
