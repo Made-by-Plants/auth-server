@@ -2,7 +2,7 @@
   "name": "auth-server",
   "version": "0.0.1",
   "main": "dist/index.js",
-  "author": "Karolis Mazukna <karolis@mazukna.com>",
+  "author": "Karolis Mazukna <karolis@ketapp.lt>",
   "license": "MIT",
   "repository": "https://github.com/Made-by-Plants/auth-server",
   "scripts": {
