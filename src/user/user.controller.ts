@@ -46,6 +46,18 @@ export class UserController {
     return user.getUser();
   }
 
+  @Get("/jwt")
+  public async jwt(@Req() req: unknown, @Res() res: unknown) {
+    const user = await new Promise<User | false>((resolve, reject) => {
+      passport.authenticate("jwt", (err, user) => {
+        if (err) return reject(new UnauthorizedError());
+        resolve(user);
+      })(req, res);
+    });
+    if (!user) return new UnauthorizedError();
+    return user.getUser();
+  }
+
   @Get("/jwks")
   public async jwks() {
     const jwk = {
