@@ -10,3 +10,8 @@ jobs:
           node-version: "14.x"
       - run: yarn install
       - run: yarn lint
+      - name: "Generate test keys for JWT"
+        run: |
+          openssl genrsa -out private.pem 1024
+          openssl rsa -in private.pem -pubout > public.pem
+      - run: yarn test
