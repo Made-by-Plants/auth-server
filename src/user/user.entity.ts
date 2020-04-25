@@ -51,7 +51,6 @@ export class User extends BaseEntity {
   }
 
   public async verifyPassword(password: string): Promise<boolean> {
-    console.log("COMPARRING PASSWORD");
     return bcrypt.compare(password, this.passwordHash);
   }
 

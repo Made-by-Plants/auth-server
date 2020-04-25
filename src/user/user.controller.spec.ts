@@ -22,7 +22,7 @@ describe("user.controller", () => {
       expect(response.data.id.length).toBe(36);
       expect(response.data.name).toEqual(username);
       expect(response.data.roles).toEqual(["user"]);
-      expect(response.data.token.length).toBeGreaterThan(900);
+      expect(response.data.token.length).toBeGreaterThan(100);
 
       const user = await User.findOneOrFail({ username });
 
