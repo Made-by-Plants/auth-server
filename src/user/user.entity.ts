@@ -11,6 +11,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Role } from "../role/role.entity";
 import { key } from "../config/jwt";
+import { MinLength } from "class-validator";
 
 @Entity()
 export class User extends BaseEntity {
@@ -18,12 +19,17 @@ export class User extends BaseEntity {
   public id!: string;
 
   @Column({ name: "name" })
+  @MinLength(5, { groups: ["signup"] })
   public username!: string;
 
   @Column()
+  @MinLength(5, { groups: ["signup"] })
   public password!: string;
 
-  @ManyToMany((type) => Role, (role) => role.users)
+  @Column({ name: "created_at" })
+  public createdAt!: Date;
+
+  @ManyToMany((_type) => Role, (role) => role.users)
   @JoinTable({
     name: "user_role",
     joinColumn: { name: "user_id", referencedColumnName: "id" },
@@ -32,20 +38,30 @@ export class User extends BaseEntity {
   roles!: Promise<Role[]>;
 
   @BeforeInsert()
-  public async hashPassword(): Promise<void> {
+  public hashPassword(): void {
     const salt = bcrypt.genSaltSync();
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = bcrypt.hashSync(this.password, salt);
   }
 
   public async verifyPassword(password: string): Promise<boolean> {
+    console.log("COMPARRING PASSWORD");
     return bcrypt.compare(password, this.password);
   }
 
-  public getJwt() {
+  public async getUser() {
+    return {
+      id: this.id,
+      name: this.username,
+      roles: await this.getRoles(),
+      token: await this.getJwt(),
+    };
+  }
+
+  public async getJwt() {
     const claim = {
       name: this.username,
       // iat: Math.floor(Date.now() / 1000),
-      "https://hasura.io/jwt/claims": this.getHasuraClaims(),
+      "https://hasura.io/jwt/claims": await this.getHasuraClaims(),
     };
     return jwt.sign(claim, key, {
       subject: this.id,
@@ -64,7 +80,7 @@ export class User extends BaseEntity {
     };
   }
 
-  async getRoles() {
-    return (await this.roles).map((el) => el.name).concat("user");
+  public async getRoles() {
+    return (await this.roles).map((role) => role.name).concat("user");
   }
 }

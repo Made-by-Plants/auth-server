@@ -15,6 +15,6 @@ export class Role extends BaseEntity {
   @Column()
   public name!: string;
 
-  @ManyToMany((type) => User, (user) => user.roles)
+  @ManyToMany((_type) => User, (user) => user.roles)
   users!: Promise<User>[];
 }

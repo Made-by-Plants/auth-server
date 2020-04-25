@@ -11,5 +11,4 @@ export const publicKey = (
 ).replace(/\\n/g, "\n");
 
 // Key Identifier – Acts as an ‘alias’ for the key
-export const kid =
-  process.env.AUTH_KEY_ID || fnv.hash(this.publicKey, 128).hex();
+export const kid = process.env.AUTH_KEY_ID || fnv.hash(publicKey, 128).hex();

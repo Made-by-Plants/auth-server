@@ -1,8 +1,10 @@
 import { getConnection } from "typeorm";
 import { User } from "./user.entity";
-import { Get, Post, JsonController } from "routing-controllers";
+import { Get, Post, JsonController, Body, Req, Res } from "routing-controllers";
 import rasha from "rasha";
 import { publicKey } from "../config/jwt";
+import { passport } from "../config/passport";
+import { promisify } from "util";
 
 @JsonController()
 export class UserController {
@@ -11,9 +13,15 @@ export class UserController {
     return getConnection().manager.find(User, { relations: ["roles"] });
   }
 
-  @Post("/login")
-  public async login() {
-    return {};
+  @Post("/signup")
+  public async signup(
+    @Body({ validate: { groups: ["signup"] } }) { username, password }: User,
+    @Req() req: unknown,
+    @Res() res: unknown
+  ) {
+    const user = await User.create({ username, password }).save();
+    await promisify(passport.authenticate("local"))(req, res);
+    return user.getUser();
   }
 
   @Get("/jwks")
@@ -27,11 +35,5 @@ export class UserController {
     return {
       keys: [jwk],
     };
-
-    // res.setHeader("Content-Type", "application/json");
-    // res.send(JSON.stringify(jwks, null, 2) + "\n");
-    // handleResponse(res, 200, jwks);
   }
-
-  // app.get('/jwks', userController.getJwks)
 }

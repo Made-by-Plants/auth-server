@@ -1,17 +1,8 @@
-import dotenv from "dotenv";
-import pino from "pino";
 import { createConnection } from "typeorm";
 import { User } from "./user/user.entity";
 import { createServer } from "./server";
 import { Role } from "./role/role.entity";
-
-dotenv.config();
-
-const logger = pino({
-  name: "ket-auth-server",
-  level: "debug",
-  prettyPrint: process.env.NODE_ENV === "development",
-});
+import { logger } from "./config/logger";
 
 createConnection({
   type: "postgres",
@@ -20,7 +11,7 @@ createConnection({
   entities: [User, Role],
   logging: "all",
 })
-  .then((connection) => {
+  .then(() => {
     const app = createServer(logger);
     app.listen(app.get("port"), () => {
       logger.info(
