@@ -14,7 +14,7 @@ export interface ITestWorld {
 
 export async function bootstrapTestServer(): Promise<ITestWorld> {
   return new Promise((resolve, reject) => {
-    createConnection()
+    createConnection({ synchronize: process.env.NODE_ENV === "test" })
       .then((connection) => {
         const app = createServer(getNullLogger());
         const listener = app.listen(0, () => {
