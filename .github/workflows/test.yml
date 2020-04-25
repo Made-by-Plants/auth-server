@@ -45,3 +45,4 @@ jobs:
           # The hostname used to communicate with the PostgreSQL service container
           DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
           NODE_ENV: test
+          SYNCHRONIZE_DB: "true"

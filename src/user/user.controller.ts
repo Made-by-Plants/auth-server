@@ -19,7 +19,9 @@ export class UserController {
     @Req() req: unknown,
     @Res() res: unknown
   ) {
-    const user = await User.create({ username, password }).save();
+    const tmpUser = User.create({ username });
+    tmpUser.password = password;
+    const user = await tmpUser.save();
     await promisify(passport.authenticate("local"))(req, res);
     return user.getUser();
   }

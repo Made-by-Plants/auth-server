@@ -27,6 +27,7 @@ describe("user.controller", () => {
       const user = await User.findOneOrFail({ username });
 
       expect(user.password !== password).toBeTruthy();
+      expect(user.passwordHash !== password).toBeTruthy();
       expect(user.verifyPassword(password)).toBeTruthy();
 
       await user.remove();

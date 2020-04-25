@@ -6,6 +6,8 @@ import {
   BeforeInsert,
   ManyToMany,
   JoinTable,
+  BeforeUpdate,
+  CreateDateColumn,
 } from "typeorm";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -22,11 +24,13 @@ export class User extends BaseEntity {
   @MinLength(5, { groups: ["signup"] })
   public username!: string;
 
-  @Column()
   @MinLength(6, { groups: ["signup"] })
-  public password!: string;
+  public password?: string;
 
-  @Column({ name: "created_at" })
+  @Column({ name: "password_hash" })
+  public passwordHash!: string;
+
+  @CreateDateColumn({ name: "created_at" })
   public createdAt!: Date;
 
   @ManyToMany((_type) => Role, (role) => role.users)
@@ -38,14 +42,17 @@ export class User extends BaseEntity {
   roles!: Promise<Role[]>;
 
   @BeforeInsert()
+  @BeforeUpdate()
   public hashPassword(): void {
-    const salt = bcrypt.genSaltSync();
-    this.password = bcrypt.hashSync(this.password, salt);
+    if (this.password) {
+      const salt = bcrypt.genSaltSync();
+      this.passwordHash = bcrypt.hashSync(this.password, salt);
+    }
   }
 
   public async verifyPassword(password: string): Promise<boolean> {
     console.log("COMPARRING PASSWORD");
-    return bcrypt.compare(password, this.password);
+    return bcrypt.compare(password, this.passwordHash);
   }
 
   public async getUser() {
