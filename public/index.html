@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="signupApp">
+      <h4>Create account</h4>
+      <input
+        v-model="username"
+        placeholder="Username"
+        type="text"
+        autocomplete="username"
+      />
+      <input
+        v-model="password"
+        placeholder="Password"
+        type="password"
+        autocomplete="new-password"
+      />
+      <button v-on:click="signup">Sign up</button>
+      <pre>{{ response }}</pre>
+    </div>
+    <script>
+      var signupApp = new Vue({
+        el: "#signupApp",
+        data: {
+          apiUrl: "http://localhost:7000",
+          username: "",
+          password: "",
+          response: "No requests sent",
+        },
+        methods: {
+          signup: function (event) {
+            fetch(this.apiUrl + "/signup", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                username: this.username,
+                password: this.password,
+              }),
+            })
+              .then((response) => response.json())
+              .then((response) => {
+                this.response = JSON.stringify(response, null, "\t");
+              });
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

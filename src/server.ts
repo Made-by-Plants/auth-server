@@ -21,6 +21,8 @@ export function createServer(logger: pino.Logger) {
   app.use(passport.initialize());
   app.use(passport.session());
 
+  app.use(express.static("public"));
+
   useExpressServer(app, { controllers: [UserController] });
 
   return app;
