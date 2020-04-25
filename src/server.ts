@@ -23,7 +23,10 @@ export function createServer(logger: pino.Logger) {
 
   app.use(express.static("public"));
 
-  useExpressServer(app, { controllers: [UserController] });
+  useExpressServer(app, {
+    controllers: [UserController],
+    currentUserChecker: (action) => action.request.user,
+  });
 
   return app;
 }

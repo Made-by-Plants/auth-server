@@ -22,11 +22,12 @@ passportjs.use(
       passwordField: "password",
     },
     (username, password, done) => {
-      User.findOneOrFail({ username }, { relations: ["roles"] })
+      User.findOne({ username }, { relations: ["roles"] })
         .then(async function (user) {
-          if (!user) return done("Unknown user");
+          const failMessage = "invalid username or password";
+          if (!user) return done(failMessage);
           const validPassword = await user.verifyPassword(password);
-          if (!validPassword) return done("Invalid password");
+          if (!validPassword) return done(failMessage);
           return done(null, user);
         })
         .catch(done);

@@ -5,28 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+      .jsonResponse {
+        margin: 0 auto;
+        border: 0;
+        height: 400px;
+        width: 100%;
+
+        overflow-wrap: break-word;
+      }
+    </style>
   </head>
   <body>
-    <div id="signupApp">
-      <h4>Create account</h4>
-      <input
-        v-model="username"
-        placeholder="Username"
-        type="text"
-        autocomplete="username"
-      />
-      <input
-        v-model="password"
-        placeholder="Password"
-        type="password"
-        autocomplete="new-password"
-      />
-      <button v-on:click="signup">Sign up</button>
-      <pre>{{ response }}</pre>
+    <div id="app">
+      <div style="display: flex;">
+        <div style="flex: 0.5;">
+          <h4>Create account</h4>
+          <input
+            v-model="username"
+            placeholder="Username"
+            type="text"
+            autocomplete="username"
+          />
+          <input
+            v-model="password"
+            placeholder="Password"
+            type="password"
+            autocomplete="new-password"
+          />
+          <button v-on:click="signup">Sign up</button>
+        </div>
+        <div style="flex: 0.5;">
+          <h4>Login</h4>
+          <input
+            v-model="username"
+            placeholder="Username"
+            type="text"
+            autocomplete="username"
+          />
+          <input
+            v-model="password"
+            placeholder="Password"
+            type="password"
+            autocomplete="new-password"
+          />
+          <button v-on:click="login">Login</button>
+        </div>
+      </div>
+      <hr />
+      <textarea class="jsonResponse">{{ response }}</textarea>
     </div>
     <script>
-      var signupApp = new Vue({
-        el: "#signupApp",
+      const myApp = new Vue({
+        el: "#app",
         data: {
           apiUrl: "http://localhost:7000",
           username: "",
@@ -36,6 +67,23 @@
         methods: {
           signup: function (event) {
             fetch(this.apiUrl + "/signup", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                username: this.username,
+                password: this.password,
+              }),
+            })
+              .then((response) => response.json())
+              .then((response) => {
+                this.response = JSON.stringify(response, null, "\t");
+              });
+          },
+          login: function (event) {
+            fetch(this.apiUrl + "/login", {
               method: "POST",
               headers: {
                 Accept: "application/json",

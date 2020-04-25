@@ -21,10 +21,10 @@ export class User extends BaseEntity {
   public id!: string;
 
   @Column({ name: "name" })
-  @MinLength(5, { groups: ["signup"] })
+  @MinLength(5, { groups: ["signup", "login"] })
   public username!: string;
 
-  @MinLength(6, { groups: ["signup"] })
+  @MinLength(6, { groups: ["signup", "login"] })
   public password?: string;
 
   @Column({ name: "password_hash" })
