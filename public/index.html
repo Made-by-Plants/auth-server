@@ -69,7 +69,7 @@
         },
         methods: {
           signup: function (event) {
-            api("/signup", {
+            api("signup", {
               method: "POST",
               headers: {
                 Accept: "application/json",
@@ -86,7 +86,7 @@
               });
           },
           login: function (event) {
-            api("/login", {
+            api("login", {
               method: "POST",
               headers: {
                 Accept: "application/json",
