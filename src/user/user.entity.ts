@@ -23,7 +23,7 @@ export class User extends BaseEntity {
   public username!: string;
 
   @Column()
-  @MinLength(5, { groups: ["signup"] })
+  @MinLength(6, { groups: ["signup"] })
   public password!: string;
 
   @Column({ name: "created_at" })

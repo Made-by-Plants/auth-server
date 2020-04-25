@@ -4,7 +4,8 @@ import { createConnection } from "../config/db";
 import { AddressInfo } from "net";
 import axios, { AxiosInstance } from "axios";
 import { Connection } from "typeorm";
-
+import faker from "faker";
+import { User } from "../user/user.entity";
 export interface ITestWorld {
   client: AxiosInstance;
   connection: Connection;
@@ -30,4 +31,10 @@ export async function bootstrapTestServer(): Promise<ITestWorld> {
       })
       .catch(reject);
   });
+}
+
+export async function getFreeUsername(): Promise<string> {
+  const randomName = faker.internet.email();
+  const user = await User.findOne({ username: randomName });
+  return user ? getFreeUsername() : randomName;
 }
