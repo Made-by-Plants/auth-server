@@ -56,17 +56,20 @@
       <textarea class="jsonResponse">{{ response }}</textarea>
     </div>
     <script>
+      const apiUrl =
+        location.protocol + "//" + location.host + location.pathname;
+      const api = (url, args) => fetch(apiUrl + "/signup", args);
       const myApp = new Vue({
         el: "#app",
         data: {
-          apiUrl: "http://localhost:7000",
+          apiUr,
           username: "",
           password: "",
           response: "No requests sent",
         },
         methods: {
           signup: function (event) {
-            fetch(this.apiUrl + "/signup", {
+            api("/signup", {
               method: "POST",
               headers: {
                 Accept: "application/json",
@@ -83,7 +86,7 @@
               });
           },
           login: function (event) {
-            fetch(this.apiUrl + "/login", {
+            api("/login", {
               method: "POST",
               headers: {
                 Accept: "application/json",
