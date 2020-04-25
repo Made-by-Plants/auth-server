@@ -8,9 +8,11 @@
   "scripts": {
     "start": "node -r reflect-metadata -r dotenv/config dist/index",
     "dev": "rimraf dist/ && tsc-watch --onSuccess \"yarn start\"",
-    "lint": "yarn eslint --ext .js,.ts src"
+    "lint": "yarn eslint --ext .js,.ts src",
+    "test": "jest"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
@@ -38,6 +40,7 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.6",
     "@types/helmet": "^0.0.45",
+    "@types/jest": "^25.2.1",
     "@types/jsonwebtoken": "^8.3.9",
     "@types/node": "^13.13.2",
     "@types/passport": "^1.0.3",
@@ -51,8 +54,11 @@
     "eslint": "^6.8.0",
     "eslint-config-typestrict": "^1.0.0",
     "eslint-plugin-sonarjs": "^0.5.0",
+    "jest": "^25.4.0",
     "pino-pretty": "^4.0.0",
+    "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
+    "ts-jest": "^25.4.0",
     "tsc-watch": "^4.2.3",
     "typescript": "^3.8.3"
   }
