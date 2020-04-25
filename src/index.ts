@@ -13,13 +13,14 @@ createConnection({
 })
   .then(() => {
     const app = createServer(logger);
-    app.listen(app.get("port"), () => {
+    app.listen(app.get("port"), () =>
       logger.info(
-        "App is running at http://localhost:%d in %s mode.",
+        "Auth server is running at http://%s:%d in %s mode.",
+        app.get("host"),
         app.get("port"),
         app.get("env")
-      );
-    });
+      )
+    );
   })
   .catch((error) => {
     logger.error(error);
