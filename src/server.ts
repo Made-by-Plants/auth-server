@@ -7,6 +7,7 @@ import passport from "passport";
 
 import { useExpressServer } from "routing-controllers";
 import { UserController } from "./user/user.controller";
+import { ActionController } from "./actions/action.controller";
 
 export function createServer(logger: pino.Logger) {
   const app = express();
@@ -24,7 +25,7 @@ export function createServer(logger: pino.Logger) {
   app.use(express.static("public"));
 
   useExpressServer(app, {
-    controllers: [UserController],
+    controllers: [UserController, ActionController],
     currentUserChecker: (action) => action.request.user,
   });
 
