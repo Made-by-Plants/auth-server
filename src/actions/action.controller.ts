@@ -1,11 +1,12 @@
-import { Post, JsonController, Body } from "routing-controllers";
+import { Post, JsonController, Body, Req } from "routing-controllers";
 import { ActionHandlers } from "./actions.map";
 import { ActionError } from "./action.errors";
 
 @JsonController()
 export class ActionController {
   @Post("/actions")
-  public async actions(@Body() actionBody: any) {
+  public async actions(@Body() actionBody: any, @Req() req: any) {
+    req.log.debug(actionBody);
     const ActionHandler = ActionHandlers.get(actionBody?.action);
     if (ActionHandler && actionBody?.input) {
       try {
