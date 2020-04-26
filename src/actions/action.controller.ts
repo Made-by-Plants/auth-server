@@ -1,19 +1,20 @@
-import { Post, JsonController, Body, Req, Res } from "routing-controllers";
-import { Response, Request } from "express";
+import { Post, JsonController, Body } from "routing-controllers";
+import { ActionHandlers } from "./actions.map";
+import { ActionError } from "./action.errors";
 
 @JsonController()
 export class ActionController {
   @Post("/actions")
-  public actions(
-    @Body() actionBody: any,
-    @Req() req: Request,
-    @Res() res: Response
-  ) {
-    req.log.info(actionBody);
-    res.status(401);
-    return {
-      message: "Actions code not implemented",
-      code: "500",
-    };
+  public async actions(@Body() actionBody: any) {
+    const ActionHandler = ActionHandlers.get(actionBody?.action);
+    if (ActionHandler && actionBody?.input) {
+      try {
+        return await new ActionHandler(actionBody.input).handle();
+      } catch (err) {
+        throw new ActionError(err.message);
+      }
+    } else {
+      throw new ActionError("Actions code not implemented");
+    }
   }
 }

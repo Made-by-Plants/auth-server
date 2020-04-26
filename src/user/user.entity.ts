@@ -14,6 +14,7 @@ import jwt from "jsonwebtoken";
 import { Role } from "../role/role.entity";
 import { key } from "../config/jwt";
 import { MinLength } from "class-validator";
+import { UnauthorizedError } from "./user.errors";
 
 @Entity()
 export class User extends BaseEntity {
@@ -88,5 +89,19 @@ export class User extends BaseEntity {
 
   public async getRoles() {
     return (await this.roles).map((role) => role.name).concat("user");
+  }
+
+  public static authPassword(
+    username: string,
+    password: string
+  ): Promise<User> {
+    return User.findOne({ username }, { relations: ["roles"] }).then(
+      async function (user) {
+        if (!user) throw new UnauthorizedError();
+        const validPassword = await user.verifyPassword(password);
+        if (!validPassword) throw new UnauthorizedError();
+        return user;
+      }
+    );
   }
 }

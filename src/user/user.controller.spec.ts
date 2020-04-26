@@ -9,14 +9,20 @@ describe("user.controller", () => {
   let world: ITestWorld;
   beforeAll(async () => (world = await bootstrapTestServer()));
   afterAll(() => world.close());
+  let username: string;
+  let user: User;
+  const password = "test-password";
+
+  beforeEach(async () => {
+    username = await getFreeUsername();
+    user = await Object.assign(User.create({ username }), {
+      password,
+    }).save();
+  });
+  afterEach(() => user.remove());
 
   describe("/login", () => {
     it("allows to login", async () => {
-      const username = await getFreeUsername();
-      const password = "test-password";
-      const user = await Object.assign(User.create({ username }), {
-        password,
-      }).save();
       const response = await world.client.post("/login", {
         username,
         password,
@@ -26,12 +32,10 @@ describe("user.controller", () => {
       expect(response.data.name).toEqual(username);
       expect(response.data.roles).toEqual(["user"]);
       expect(response.data.token.length).toBeGreaterThan(100);
-      await user.remove();
     });
 
     it("throws error an error for invalid login", async () => {
       const username = "bobby123";
-      const password = "test-password";
       const response = await world.client.post(
         "/login",
         {
@@ -42,7 +46,7 @@ describe("user.controller", () => {
       );
 
       expect(response.data.message).toMatchInlineSnapshot(
-        `"invalid username or password"`
+        `"invalid credentials"`
       );
       expect(response.data.name).toMatchInlineSnapshot(`"UnauthorizedError"`);
       expect(response.status).toBe(401);
@@ -51,7 +55,6 @@ describe("user.controller", () => {
 
   describe("/signup", () => {
     it("creates user and hashes password", async () => {
-      const password = "dumb-test-password";
       const username = await getFreeUsername();
       const response = await world.client.post("/signup", {
         username,

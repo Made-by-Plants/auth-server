@@ -9,7 +9,7 @@
     "start": "node -r reflect-metadata -r dotenv/config dist/index",
     "dev": "rimraf dist/ && tsc-watch --onSuccess \"yarn start\"",
     "lint": "yarn eslint --ext .js,.ts src",
-    "test": "jest"
+    "test": "jest -i"
   },
   "dependencies": {
     "axios": "^0.19.2",
