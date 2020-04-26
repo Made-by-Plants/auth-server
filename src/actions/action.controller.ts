@@ -7,7 +7,7 @@ export class ActionController {
   @Post("/actions")
   public async actions(@Body() actionBody: any, @Req() req: any) {
     req.log.debug(actionBody);
-    const ActionHandler = ActionHandlers.get(actionBody?.action);
+    const ActionHandler = ActionHandlers.get(actionBody?.action?.name);
     if (ActionHandler && actionBody?.input) {
       try {
         return await new ActionHandler(actionBody.input).handle();

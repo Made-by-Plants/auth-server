@@ -26,7 +26,7 @@ describe("action.controller", () => {
     const response = await world.client.post(
       "/actions",
       {
-        action: "UnimplementedAction",
+        action: { name: "UnimplementedAction" },
         input: {},
       },
       { validateStatus: () => true }
@@ -43,7 +43,7 @@ describe("action.controller", () => {
       const response = await world.client.post(
         "/actions",
         {
-          action: "Login",
+          action: { name: "Login" },
           input: {
             username: "jake",
             password: "secretpassword",
@@ -62,7 +62,7 @@ describe("action.controller", () => {
       const response = await world.client.post(
         "/actions",
         {
-          action: "Login",
+          action: { name: "Login" },
           input: {
             username: username,
             password: password,
