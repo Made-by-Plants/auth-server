@@ -32,7 +32,7 @@
     "rasha": "^1.2.5",
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.8.1",
-    "typeorm": "^0.2.24"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
